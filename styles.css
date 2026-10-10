@@ -1267,3 +1267,94 @@ html,body{max-width:100%;overflow-x:clip}
     transition: none;
   }
 }
+
+
+/* V27: Sanfter Buchseitenwechsel statt perspektivisch gequetschter
+   Gesamtseite. Nur das sich ablösende Blatt wird verdeckt; die Leseseite,
+   der beige linke Vorsatz und der Papierstapel bleiben geometrisch stabil. */
+.book-stage .book-left-page {
+  background:
+    repeating-linear-gradient(to bottom,
+      rgba(132,106,79,.018) 0 1px,transparent 1px 6px),
+    linear-gradient(93deg,
+      #dac6b0 0%,#efe0cd 7%,#f9eddf 32%,
+      #f8eddf 69%,#e8d7c3 91%,#c4a98b 100%);
+  box-shadow:
+    inset 6px 0 13px rgba(100,75,54,.09),
+    inset -17px 0 23px rgba(94,66,46,.16),
+    -6px 14px 23px rgba(67,46,30,.09);
+}
+.book-stage .left-page-stamp {display:none}
+.book-stage > .book-frame {
+  transform-style:flat;
+}
+.book-frame .turn-leaf {
+  z-index:8;
+  transform:none;
+  transform-style:flat;
+  will-change:clip-path;
+  backface-visibility:visible;
+  -webkit-backface-visibility:visible;
+  border-radius:0 9px 9px 0;
+  overflow:hidden;
+}
+.book-frame .turn-leaf-front {
+  position:absolute;
+  inset:0;
+  transform:none;
+  backface-visibility:visible;
+  -webkit-backface-visibility:visible;
+  border-radius:inherit;
+  box-shadow:none;
+}
+.book-frame .turn-leaf-front::after {
+  opacity:.08;
+  background:linear-gradient(to right,rgba(37,28,20,.22),transparent 9%);
+}
+.book-frame .turn-leaf-back,
+.book-frame .leaf-paper-edge {display:none}
+.book-frame .page-fold {
+  position:absolute;
+  z-index:9;
+  top:0;
+  bottom:0;
+  left:calc(100% - 27px);
+  width:31px;
+  pointer-events:none;
+  opacity:0;
+  border-left:1px solid rgba(148,120,95,.26);
+  border-radius:3px 2px 2px 3px;
+  background:linear-gradient(to right,
+    rgba(93,67,44,.13) 0%,
+    rgba(177,148,115,.22) 10%,
+    #e4d0b9 26%,
+    #fff7ed 58%,
+    rgba(242,229,214,.72) 81%,
+    transparent 100%);
+  box-shadow:-5px 0 12px rgba(68,49,34,.08);
+  clip-path:polygon(0 0,100% 2%,100% 98%,0 100%);
+}
+.book-frame .page-fold[hidden] {display:none}
+.book-frame.is-turning .page-corner {opacity:0}
+.book-stage .book-left-page::after {
+  background:linear-gradient(to right,
+    transparent,rgba(107,81,59,.035) 28%,rgba(79,56,40,.16));
+}
+/* Die ersten 850 ms öffnen die beige linke Seite. Erst anschließend
+   wird die rechte Seite umgeblättert, damit keine Breitenänderung mitten
+   im Blattwechsel die Fotos oder Texte verzieht. */
+.book-stage > .book-frame,
+.book-stage > .book-left-page {
+  transition-timing-function:cubic-bezier(.23,.72,.23,1);
+}
+@media(max-width:650px) {
+  .book-frame .page-fold {
+    width:19px;
+    border-radius:2px;
+  }
+  .book-stage .book-left-page::after {width:5px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .book-frame .turn-leaf,
+  .book-frame .page-fold {transition:none}
+}
