@@ -72,7 +72,7 @@ function paint(index){
   // Permanente beige Rückseiten der bereits umgeblätterten Buchseiten.
   const turned = index > 0;
   book.classList.toggle('has-turned-pages', turned);
-  book.style.setProperty('--turned-stack-width', `${turned ? Math.min(67, 45 + index * 2) : 0}px`);
+  book.style.setProperty('--turned-stack-width', `${turned ? Math.min(19, 12 + index * 0.7) : 0}px`);
 }
 function syncControls(){
  chapterName.textContent=pages[current].title;
