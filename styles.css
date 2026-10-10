@@ -499,3 +499,179 @@ html,body{max-width:100%;overflow-x:clip}
  .nav-coming-soon { font-size: .78em; }
  .service-tile:has(.coming-soon-inline) h3 { font-size: 19px; }
 }
+
+
+/* V16: Neues Editorial-Layout für die Buchseite Über mich */
+.about-redesign {
+  grid-template-columns: 46% 54%;
+  background: var(--paper);
+}
+.about-redesign .about-portrait {
+  position: relative;
+  isolation: isolate;
+  background: #e7d8c7;
+}
+.about-redesign .about-portrait::before {
+  content: "";
+  position: absolute;
+  inset: -24px;
+  background: url("assets/Foto.jpeg") center / cover no-repeat;
+  filter: blur(22px);
+  opacity: .32;
+  z-index: 0;
+  pointer-events: none;
+}
+.about-redesign .about-portrait img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.about-photo-caption {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 45px 30px 27px;
+  background: linear-gradient(to top, rgba(16,40,60,.8), rgba(16,40,60,0));
+  color: #fffaf4;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  line-height: 1.45;
+}
+.about-photo-caption .about-caption-rule {
+  flex: 0 0 26px;
+  height: 1px;
+  background: #e3ccb4;
+}
+.about-photo-caption small {
+  display: block;
+  padding-top: 4px;
+  font: italic 24px/1.1 var(--serif);
+  letter-spacing: 0;
+}
+.about-redesign .about-story {
+  min-width: 0;
+  justify-content: center;
+  padding: clamp(26px, 4.2vw, 59px);
+}
+.about-redesign .about-story .chapter-heading {
+  font-size: clamp(51px, 5.4vw, 74px);
+  line-height: .97;
+  letter-spacing: -.034em;
+  margin: 12px 0 10px;
+  overflow-wrap: normal;
+}
+.about-redesign .about-story .chapter-heading em {
+  font-weight: 500;
+  font-style: italic;
+}
+.about-redesign .about-story .about-subline {
+  font: italic 500 clamp(26px, 3.15vw, 40px)/1.06 var(--serif);
+  letter-spacing: -.02em;
+  color: #9d7b5d;
+  margin: 0;
+}
+.about-redesign .about-story .rule {
+  margin: 17px 0 17px;
+}
+.about-redesign .about-story .copy {
+  font-size: 13px;
+  line-height: 1.62;
+  margin: 0 0 11px;
+  max-width: 49ch;
+}
+.about-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 7px 0 0;
+}
+.about-values span {
+  display: inline-block;
+  padding: 6px 9px;
+  border: 1px solid #d9c8b5;
+  color: #6c6259;
+  background: rgba(238,226,213,.36);
+  font: 600 9px/1.2 var(--sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.about-redesign .about-story .btn {
+  margin-top: 19px;
+}
+@media(max-width:850px) and (min-width:651px) {
+  .about-redesign {grid-template-columns:43% 57%}
+  .about-redesign .about-story {padding:25px}
+  .about-redesign .about-story .chapter-heading {font-size:clamp(48px,6.2vw,59px)}
+  .about-redesign .about-story .about-subline {font-size:30px}
+  .about-redesign .about-story .copy {font-size:11.5px}
+}
+@media(max-width:650px) {
+  .about-redesign {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .about-redesign .about-portrait {
+    flex: 0 0 35%;
+    height: 35%;
+    min-height: 0;
+    background: #e7d8c7;
+  }
+  .about-redesign .about-portrait img {object-fit: contain;object-position:center}
+  .about-redesign .about-photo-caption {display:none}
+  .about-redesign .about-story {
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 15px 25px 14px;
+    justify-content: center;
+  }
+  .about-redesign .about-story .eyebrow {font-size:9px}
+  .about-redesign .about-story .chapter-heading {
+    font-size: clamp(41px, 10vw, 52px);
+    line-height: .95;
+    margin: 7px 0 5px;
+  }
+  .about-redesign .about-story .about-subline {
+    font-size: clamp(27px, 6.5vw, 35px);
+    line-height: 1.04;
+  }
+  .about-redesign .about-story .rule {margin: 9px 0 10px}
+  .about-redesign .about-story .copy {
+    font-size: 11px;
+    line-height: 1.44;
+    margin: 0 0 8px;
+    max-width: none;
+  }
+  .about-values {gap:6px;margin:3px 0 0}
+  .about-values span {font-size:8px;padding:5px 7px;letter-spacing:.045em}
+  .about-redesign .about-story .btn {
+    margin-top: 10px;
+    min-height: 40px;
+    padding: 10px 13px;
+    font-size: 10px;
+  }
+}
+@media(max-width:390px) {
+  .about-redesign .about-portrait {flex-basis:32%;height:32%}
+  .about-redesign .about-story {padding:12px 19px}
+  .about-redesign .about-story .chapter-heading {font-size:40px;margin:5px 0 4px}
+  .about-redesign .about-story .about-subline {font-size:27px}
+  .about-redesign .about-story .rule {margin:7px 0 8px}
+  .about-redesign .about-story .copy {font-size:10.7px;line-height:1.4;margin-bottom:7px}
+  .about-redesign .about-story .btn {margin-top:8px}
+}
+@media(max-width:340px) {
+  .about-redesign .about-story {padding:10px 16px}
+  .about-redesign .about-story .chapter-heading {font-size:38px}
+  .about-redesign .about-story .about-subline {font-size:25px}
+  .about-redesign .about-story .copy {font-size:10.3px;line-height:1.38}
+  .about-values span {font-size:7.6px;padding:4px 6px}
+}
