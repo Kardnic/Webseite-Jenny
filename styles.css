@@ -365,3 +365,25 @@ html,body{max-width:100%;overflow-x:clip}
   .page-body { overscroll-behavior: auto; overflow: clip; }
   .paper-current { overflow: clip; }
 }
+
+
+/* V12: Scroll chain must be available on all pointer configurations */
+/* Always permit vertical page panning through the book: some Android
+   WebViews and mobile emulators report pointer:fine despite touch support.
+   A clipped (not hidden) page body isn't a scroll container and cannot
+   absorb/choke off the document's native swipe gesture. */
+.book-stage,
+.book-frame,
+.paper-current,
+.page,
+.page-body,
+.book-current {
+  touch-action: pan-y pinch-zoom;
+}
+.page-body {
+  overscroll-behavior: auto;
+  overflow: clip;
+}
+.paper-current {
+  overflow: clip;
+}
