@@ -970,3 +970,54 @@ html,body{max-width:100%;overflow-x:clip}
   .career-entry p,.career-focus p {font-size:10.3px;line-height:1.35}
   .career-focus h3 {font-size:23px}
 }
+
+
+/* V20: Umgeblätterte beige Rückseiten bleiben als Papierstapel sichtbar */
+/* Aufgeschlagene Buchseiten zeigen links die bereits umgeblätterten Blätter.
+   Der Papierstapel liegt unter dem animierten Blatt und unter dem Buchrücken. */
+.turned-pages {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  top: 8px;
+  bottom: 10px;
+  left: -8px;
+  width: var(--turned-stack-width, 0px);
+  opacity: 0;
+  border-right: 1px solid rgba(132, 101, 72, .45);
+  border-radius: 3px 13px 10px 3px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0, transparent 3px,
+      rgba(102, 74, 52, .15) 3px, rgba(102, 74, 52, .15) 4px),
+    linear-gradient(90deg,
+      #cbb5a0 0%, #e3d0bc 24%, #f3e7da 51%,
+      #ddc5ae 78%, #faf0e2 100%);
+  box-shadow:
+    inset -4px 0 5px rgba(108, 80, 55, .16),
+    4px 0 9px rgba(65, 44, 28, .18);
+  clip-path: polygon(
+    0 0, 77% 0, 98% 5px,
+    95% 24%, 100% 48%, 95% 77%,
+    98% calc(100% - 7px), 79% 100%, 0 100%
+  );
+  transition: width .28s ease, opacity .28s ease;
+}
+.book-frame.has-turned-pages .turned-pages {
+  opacity: .96;
+}
+.book-frame.is-turning .turned-pages {
+  opacity: .8;
+}
+@media (max-width: 650px) {
+  .turned-pages {
+    left: -5px;
+    top: 7px;
+    bottom: 7px;
+    width: min(var(--turned-stack-width, 0px), 26px);
+    border-radius: 2px 8px 8px 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .turned-pages { transition: none; }
+}
