@@ -18,6 +18,7 @@ const pages = [
 const currentPage = document.getElementById('book-current');
 const leaf = document.getElementById('book-turn');
 const leafFront = document.getElementById('leaf-front');
+const pageFold = document.getElementById('page-fold');
 const revealShade = document.getElementById('page-reveal-shade');
 const castShadow = document.getElementById('page-cast-shadow');
 const corner = document.getElementById('page-corner');
@@ -95,7 +96,7 @@ function syncControls(){
  });
 }
 function finish(target,changeHistory){
- current=target;paint(current);leaf.hidden=true;leaf.className='turn-leaf';leafFront.innerHTML='';book.classList.remove('is-turning');animating=false;
+ current=target;paint(current);leaf.hidden=true;leaf.className='turn-leaf';leafFront.innerHTML='';pageFold.hidden=true;book.classList.remove('is-turning');animating=false;
  activeAnimations.forEach(a=>a.cancel());activeAnimations=[];revealShade.style.opacity='0';castShadow.style.opacity='0';syncControls();
  if(changeHistory && location.hash!==`#${pages[current].id}`) history.pushState({page:pages[current].id},'',`#${pages[current].id}`);
  if(pending!==null){const next=pending;pending=null;if(next.index!==current)goTo(next.index,next.changeHistory);}
@@ -104,55 +105,77 @@ async function goTo(target,changeHistory=true){
  if(!Number.isInteger(target)||target<0||target>=pages.length)return;
  if(animating){pending={index:target,changeHistory};return;}
  if(target===current)return;
- const forward=target>current;
  if(prefersReducedMotion.matches){finish(target,changeHistory);return;}
- animating=true;book.classList.add('is-turning');
- leafFront.innerHTML=markup(forward?current:target);
+ const forward=target>current;
+ animating=true;
+
+ // Die erste Seite wird zuerst aufgeschlagen. Die seitliche Bewegung
+ // ist fertig, BEVOR die eigentliche Seite umblättert – so werden Bilder
+ // und Überschriften nicht während der Bewegung gequetscht.
+ if(current===0 && target>0){
+   bookStage.classList.remove('is-cover');
+   await new Promise(resolve=>setTimeout(resolve,window.innerWidth<=650?220:870));
+ }
+
+ // Das alte Blatt bleibt als Overlay stehen; die neue Seite liegt von
+ // Anfang an unverzerrt dahinter. Nur die Sichtbarkeit der Vorderseite
+ // und eine feine beige Falzkante bewegen sich.
+ leafFront.innerHTML=markup(current);
+ leaf.hidden=false;
+ leaf.className=`turn-leaf ${forward?'turn-forward':'turn-backward'}`;
+ pageFold.hidden=false;
+ book.classList.add('is-turning');
  book.dataset.chapter=pages[target].chapter;
- currentPage.innerHTML=markup(forward?target:current);
- updatePaperLayers(target);
- leaf.hidden=false;leaf.className=`turn-leaf ${forward?'turn-forward':'turn-backward'}`;
- // Statt einer starren Drehung wird der Turn in mehreren Abschnitten geführt:
- // erst wird die Ecke angehoben, dann die Seite zügig geschwungen,
- // am Ende verlangsamt sie sich mit einem leichten Nachfedern.
- const duration=1390;
- // Die animierte rechte Buchseite wird beim Umklappen an die Breite
- // des dauerhaft sichtbaren linken Blattes angepasst. So ragt sie
- // am Ende der Bewegung nicht weit aus dem geöffneten Buch heraus.
- const rightWidth = Math.max(1, book.getBoundingClientRect().width);
- // Wenn die erste Seite aufklappt, ist das linke Blatt am Anfang der
- // CSS-Transition noch 0px breit. Den Endwert hier bereits berücksichtigen.
- const leftWidth = Math.max(leftPage.getBoundingClientRect().width,
-   rightWidth * (window.innerWidth <= 650 ? .035 : .25));
- const foldedScale = Math.min(1, Math.max(.035, leftWidth / rightWidth));
- const pose = (angle, scale=1) => `perspective(1800px) rotateY(${angle}deg) scaleX(${scale})`;
- const forwardFrames=[
-  {transform:pose(0),offset:0,easing:'cubic-bezier(.40,0,.67,.25)'},
-  {transform:pose(-9),offset:.13,easing:'cubic-bezier(.48,.12,.56,.64)'},
-  {transform:pose(-43),offset:.34,easing:'cubic-bezier(.52,.20,.56,.73)'},
-  {transform:pose(-97,foldedScale),offset:.55,easing:'cubic-bezier(.36,.61,.40,1)'},
-  {transform:pose(-160,foldedScale),offset:.83,easing:'cubic-bezier(.15,.63,.22,1)'},
-  {transform:pose(-180,foldedScale),offset:1}
+ currentPage.innerHTML=markup(target);
+ if(target!==0){
+   updatePaperLayers(target);
+ }else{
+   // Beim Zurückblättern auf das Deckblatt bleibt das Buch offen,
+   // bis die Animation abgeschlossen ist. Danach schließt es sich.
+   book.classList.add('has-right-pages');
+   book.style.setProperty('--remaining-stack-width','18px');
+ }
+
+ const duration=940;
+ const easing='cubic-bezier(.55,.06,.17,1)';
+ const frontFrames=forward?[
+   {clipPath:'inset(0 0% 0 0%)',opacity:1,offset:0},
+   {clipPath:'inset(0 9% 0 0%)',opacity:1,offset:.15},
+   {clipPath:'inset(0 51% 0 0%)',opacity:1,offset:.54},
+   {clipPath:'inset(0 91% 0 0%)',opacity:1,offset:.89},
+   {clipPath:'inset(0 100% 0 0%)',opacity:1,offset:1}
+ ]:[
+   {clipPath:'inset(0 0% 0 0%)',opacity:1,offset:0},
+   {clipPath:'inset(0 0% 0 9%)',opacity:1,offset:.15},
+   {clipPath:'inset(0 0% 0 51%)',opacity:1,offset:.54},
+   {clipPath:'inset(0 0% 0 91%)',opacity:1,offset:.89},
+   {clipPath:'inset(0 0% 0 100%)',opacity:1,offset:1}
  ];
- const backFrames=[
-  {transform:pose(-180,foldedScale),offset:0,easing:'cubic-bezier(.34,0,.56,.28)'},
-  {transform:pose(-168,foldedScale),offset:.15,easing:'cubic-bezier(.46,.10,.57,.67)'},
-  {transform:pose(-128,foldedScale),offset:.39,easing:'cubic-bezier(.53,.23,.57,.77)'},
-  {transform:pose(-65),offset:.63,easing:'cubic-bezier(.30,.55,.38,1)'},
-  {transform:pose(-13),offset:.88,easing:'cubic-bezier(.12,.58,.2,1)'},
-  {transform:pose(0),offset:1}
+ const foldFrames=forward?[
+   {left:'calc(100% - 28px)',opacity:0,offset:0},
+   {left:'calc(91% - 28px)',opacity:.9,offset:.15},
+   {left:'calc(49% - 28px)',opacity:.93,offset:.54},
+   {left:'calc(9% - 28px)',opacity:.7,offset:.89},
+   {left:'-27px',opacity:0,offset:1}
+ ]:[
+   {left:'-3px',opacity:0,offset:0},
+   {left:'calc(9% - 3px)',opacity:.82,offset:.15},
+   {left:'calc(51% - 3px)',opacity:.92,offset:.54},
+   {left:'calc(91% - 3px)',opacity:.74,offset:.89},
+   {left:'calc(100% - 3px)',opacity:0,offset:1}
  ];
- const turn=leaf.animate(forward?forwardFrames:backFrames,{duration,fill:'both',easing:'linear'});
- const shadow1=revealShade.animate(forward?[
-   {opacity:0,offset:0},{opacity:.14,offset:.12},{opacity:.64,offset:.48},{opacity:.36,offset:.72},{opacity:0,offset:1}
-  ]:[{opacity:0,offset:0},{opacity:.20,offset:.14},{opacity:.65,offset:.53},{opacity:.23,offset:.84},{opacity:0,offset:1}],
-  {duration,fill:'both',easing:'ease-in-out'});
- const shadow2=castShadow.animate(forward?[
-   {opacity:0,offset:0},{opacity:.11,offset:.12},{opacity:.9,offset:.48},{opacity:.28,offset:.77},{opacity:0,offset:1}
-  ]:[{opacity:0,offset:0},{opacity:.23,offset:.17},{opacity:.86,offset:.54},{opacity:.10,offset:.87},{opacity:0,offset:1}],
-  {duration,fill:'both',easing:'ease-in-out'});
- activeAnimations=[turn,shadow1,shadow2];
- try{await turn.finished;}catch(_){/* interrupted by reduced motion or another navigation */}
+ const turn=leaf.animate(frontFrames,{duration,fill:'both',easing});
+ const fold=pageFold.animate(foldFrames,{duration,fill:'both',easing});
+ const underShade=revealShade.animate([
+   {opacity:0,offset:0},{opacity:.20,offset:.38},
+   {opacity:.30,offset:.67},{opacity:0,offset:1}
+ ],{duration,fill:'both',easing:'ease-in-out'});
+ const cast=castShadow.animate([
+   {opacity:0,offset:0},{opacity:.11,offset:.43},
+   {opacity:.16,offset:.72},{opacity:0,offset:1}
+ ],{duration,fill:'both',easing:'ease-in-out'});
+ activeAnimations=[turn,fold,underShade,cast];
+ try{await turn.finished;}catch(_){/* Animation wurde abgebrochen. */}
  finish(target,changeHistory);
 }
 function indexFromHash(){const id=decodeURIComponent(location.hash.slice(1));const index=pages.findIndex(p=>p.id===id);return index<0?0:index;}
