@@ -273,3 +273,65 @@ html,body{max-width:100%;overflow-x:clip}
   .service-tile-admin h3 { font-size: 17px; }
   #book[data-chapter="projekte"] .service-intro-copy .chapter-heading { font-size: 29px; }
 }
+
+
+/* V10: Mobile contact portrait - no cropping */
+@media (max-width:650px) {
+  /* The client's portrait is a vertical photograph: display it fully rather
+     than force it into the former 22%-high panoramic flower banner. */
+  .single-contact-picture {
+    position: relative;
+    flex: 0 0 31%;
+    height: 31%;
+    background: #e9ddd0;
+    isolation: isolate;
+  }
+  .single-contact-picture::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    background: url("assets/Foto.jpeg") center / cover no-repeat;
+    filter: blur(17px);
+    opacity: .18;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .single-contact-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+  /* The decorative quote previously sat across the face. The full wording
+     is already presented elsewhere in the contact chapter. */
+  .single-contact-picture .contact-image-text {
+    display: none;
+  }
+  .single-contact-copy {
+    flex: 1 1 0;
+    min-height: 0;
+    justify-content: center;
+    padding: 12px 22px;
+  }
+  .single-contact-copy .chapter-heading {
+    font-size: clamp(40px, 9.5vw, 52px);
+    line-height: 1;
+    margin: 7px 0 1px;
+  }
+  .single-contact-copy .hand-title {
+    font-size: clamp(34px, 8vw, 46px);
+    line-height: 1.04;
+  }
+  .single-contact-copy .rule { margin: 8px 0 10px; }
+  .single-contact-copy .copy { font-size: 11.5px; line-height: 1.45; }
+  .single-contact-copy .contact-options { gap: 7px; margin: 10px 0 11px; }
+  .single-contact-copy .contact-options a,
+  .single-contact-copy .contact-options > div { font-size: 11.5px; }
+}
+@media (max-width: 360px) {
+  .single-contact-picture { flex-basis: 29%; height: 29%; }
+  .single-contact-copy { padding: 10px 16px; }
+  .single-contact-copy .chapter-heading { font-size: 39px; }
+  .single-contact-copy .hand-title { font-size: 33px; }
+  .single-contact-copy .copy { font-size: 11px; }
+}
