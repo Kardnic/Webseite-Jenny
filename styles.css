@@ -971,35 +971,37 @@ html,body{max-width:100%;overflow-x:clip}
   .career-focus h3 {font-size:23px}
 }
 
-/* V22: Dezente, bündige Papierlagen entlang des Buchrückens.
-   Keine großen beigen Flächen, keine zackige Kante und keine Textüberlagerung. */
+/* V23: Die umgeblätterten Papierlagen liegen nur AUSSERHALB der Buchseite.
+   Der rechte Rand des Stapels stößt an den Buchrücken; niemals über Text/Bild. */
 .turned-pages {
   position:absolute;
   z-index:4;
   pointer-events:none;
-  left:12px;
+  left:auto;
+  right:100%;
   top:5px;
   bottom:6px;
   width:var(--turned-stack-width, 0px);
   opacity:0;
-  border-radius:0 3px 3px 0;
-  border-right:1px solid rgba(157,129,102,.32);
+  border-radius:3px 0 0 3px;
+  border-right:1px solid rgba(157,129,102,.37);
   background:
     repeating-linear-gradient(90deg,
-      transparent 0px, transparent 3px,
-      rgba(149,124,101,.10) 3px, rgba(149,124,101,.10) 4px),
-    linear-gradient(90deg,#eadbc9 0%,#f4e9dc 68%,#e6d4bf 100%);
-  box-shadow:1px 0 3px rgba(74,56,39,.09);
+      transparent 0px, transparent 2px,
+      rgba(149,124,101,.10) 2px, rgba(149,124,101,.10) 3px),
+    linear-gradient(90deg,#e2cfba 0%,#f4e9dc 65%,#e6d4bf 100%);
+  box-shadow:inset -2px 0 3px rgba(74,56,39,.09),-2px 1px 4px rgba(74,56,39,.1);
   transition:width .28s ease,opacity .28s ease;
 }
-.book-frame.has-turned-pages .turned-pages { opacity:.85; }
-.book-frame.is-turning .turned-pages { opacity:.65; }
+.book-frame.has-turned-pages .turned-pages { opacity:.88; }
+.book-frame.is-turning .turned-pages { opacity:.7; }
 @media(max-width:650px) {
   .turned-pages {
-    left:12px;
+    left:auto;
+    right:100%;
     top:4px;
     bottom:5px;
-    border-right-color:rgba(157,129,102,.24);
+    border-right-color:rgba(157,129,102,.28);
   }
 }
 @media(prefers-reduced-motion:reduce) {
