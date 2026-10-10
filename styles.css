@@ -387,3 +387,41 @@ html,body{max-width:100%;overflow-x:clip}
 .paper-current {
   overflow: clip;
 }
+
+
+/* V13: Tausche Bildmotive in Über mich und Kontakt */
+.single-about-picture img {
+  object-position: center 32%;
+}
+.single-contact-picture img {
+  object-position: center;
+}
+@media (max-width: 650px) {
+  /* Das hochformatige Porträt vollständig auf „Über mich“ zeigen. */
+  .single-about-picture {
+    flex: 0 0 29%;
+    height: 29%;
+    background: #e9ddd0;
+  }
+  .single-about-picture img {
+    object-fit: contain;
+    object-position: center;
+  }
+  /* Hortensien sind ein Bildmotiv, kein Porträt: wieder bildfüllend. */
+  .single-contact-picture {
+    flex: 0 0 24%;
+    height: 24%;
+    background: #e9ddd0;
+  }
+  .single-contact-picture::before {
+    display: none;
+  }
+  .single-contact-picture img {
+    object-fit: cover;
+    object-position: center;
+  }
+}
+@media (max-width: 360px) {
+  .single-about-picture { flex-basis: 27%; height: 27%; }
+  .single-contact-picture { flex-basis: 22%; height: 22%; }
+}
