@@ -153,11 +153,11 @@ document.addEventListener('keydown',event=>{
  if(event.key==='ArrowLeft'){event.preventDefault();goTo(current-1);}
 });
 book.addEventListener('touchstart',event=>{
- if(event.touches.length!==1||animating)return;
+ if(realFlipbook || event.touches.length!==1 || animating)return;
  gestureStart={x:event.touches[0].clientX,y:event.touches[0].clientY};
 },{passive:true});
 book.addEventListener('touchend',event=>{
- if(!gestureStart||event.changedTouches.length!==1)return;
+ if(realFlipbook || !gestureStart || event.changedTouches.length!==1)return;
  const dx=event.changedTouches[0].clientX-gestureStart.x;
  const dy=event.changedTouches[0].clientY-gestureStart.y;
  gestureStart=null;
