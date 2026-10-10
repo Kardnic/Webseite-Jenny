@@ -970,3 +970,73 @@ html,body{max-width:100%;overflow-x:clip}
   .career-entry p,.career-focus p {font-size:10.3px;line-height:1.35}
   .career-focus h3 {font-size:23px}
 }
+
+
+/* V29: MIT PageFlip – weiche, echte Seitenkrümmung */
+/* PageFlip erzeugt eine echte gekrümmte Blattoberfläche über den bestehenden
+   Buchseiten. Die DOM-Inhalte selbst bleiben unverändert und barrierearm. */
+.real-pageflip {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:20;
+  visibility:hidden;
+  pointer-events:none;
+  touch-action:pan-y;
+}
+.book-frame.has-real-pageflip {
+  transform-style:flat;
+}
+.book-frame.has-real-pageflip .real-pageflip {
+  visibility:visible;
+  pointer-events:auto;
+}
+.book-frame.has-real-pageflip .paper-current {
+  visibility:hidden;
+}
+.book-frame.has-real-pageflip .turn-leaf,
+.book-frame.has-real-pageflip .page-reveal-shade,
+.book-frame.has-real-pageflip .page-cast-shadow {
+  display:none!important;
+}
+.book-frame.has-real-pageflip .spine-shadow {
+  z-index:3;
+  width:12px;
+  opacity:.30;
+}
+.book-frame.has-real-pageflip .page-corner {
+  z-index:70;
+}
+.real-pageflip-sheet {
+  width:100%;
+  height:100%;
+  min-width:0;
+  overflow:hidden;
+  background:var(--paper);
+  box-shadow:inset -1px 0 rgba(151,120,93,.15);
+  backface-visibility:hidden;
+}
+.real-pageflip-sheet .page {
+  width:100%;
+  height:100%;
+  min-width:0;
+  overflow:hidden;
+}
+.real-pageflip .stf__parent,
+.real-pageflip .stf__wrapper {
+  margin:0;
+  max-width:none;
+}
+@media(max-width:650px){
+  .book-frame.has-real-pageflip .spine-shadow {
+    width:7px;
+    opacity:.18;
+  }
+  .real-pageflip-sheet {
+    border-radius:1px 6px 6px 1px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .real-pageflip {scroll-behavior:auto}
+}
