@@ -33,6 +33,9 @@ let animating = false;
 let pending = null;
 let gestureStart = null;
 let activeAnimations = [];
+let realFlipbook = null;
+let flipHistory = true;
+let flipbookSize = {width:0,height:0};
 const A='assets/';
 function image(name,alt){ return `<img src="${A}${name}.jpg" alt="${alt}" draggable="false">`; }
 function navAction(id,text,klass='simple-link'){return `<a href="#${id}" data-chapter="${id}" class="${klass}">${text} <span aria-hidden="true">↗</span></a>`;}
@@ -84,6 +87,12 @@ function finish(target,changeHistory){
 }
 async function goTo(target,changeHistory=true){
  if(!Number.isInteger(target)||target<0||target>=pages.length)return;
+ if(realFlipbook){
+   if(target===current)return;
+   flipHistory=changeHistory;
+   realFlipbook.flip(target,'bottom');
+   return;
+ }
  if(animating){pending={index:target,changeHistory};return;}
  if(target===current)return;
  const forward=target>current;
@@ -158,3 +167,86 @@ window.addEventListener('popstate',()=>goTo(indexFromHash(),false));
 window.addEventListener('hashchange',()=>goTo(indexFromHash(),false));
 document.getElementById('year').textContent=new Date().getFullYear();
 paint(current);syncControls();
+
+/*
+ * Der Referenzfilm verwendet Turn.js, dessen freie Version nicht für die
+ * kommerzielle Nutzung freigegeben ist. Hier kommt stattdessen die
+ * MIT-lizenzierte Bibliothek StPageFlip 2.0.7 zum Einsatz.
+ * Alle Inhalte stammen weiterhin aus der bestehenden markup()-Funktion.
+ * Wenn die Bibliothek nicht verfügbar ist, bleibt die alte Navigation aktiv.
+ */
+function setupRealPageFlip(){
+  if(!window.St || typeof window.St.PageFlip!=='function')return;
+  if(realFlipbook)return;
+  const width=Math.round(book.getBoundingClientRect().width);
+  const height=Math.round(book.getBoundingClientRect().height);
+  if(width<180 || height<300)return;
+  const root=document.createElement('div');
+  root.className='real-pageflip';
+  root.id='real-pageflip';
+  root.setAttribute('aria-label','Buch mit realistischem Blättereffekt');
+  root.innerHTML=pages.map((_,i)=>`<div class="real-pageflip-sheet">${markup(i)}</div>`).join('');
+  book.appendChild(root);
+  try{
+    const items=root.querySelectorAll('.real-pageflip-sheet');
+    const flipbook=new window.St.PageFlip(root,{
+      width:width,
+      height:height,
+      size:'fixed',
+      usePortrait:true,
+      showCover:false,
+      drawShadow:true,
+      maxShadowOpacity:0.30,
+      flippingTime:950,
+      autoSize:false,
+      mobileScrollSupport:true,
+      swipeDistance:45,
+      clickEventForward:false
+    });
+    flipbook.loadFromHTML(items);
+    flipbook.turnToPage(current);
+    flipbook.on('flip',(event)=>{
+      const nextIndex=Number(event.data);
+      if(!Number.isInteger(nextIndex) || nextIndex<0 || nextIndex>=pages.length)return;
+      current=nextIndex;
+      paint(current);syncControls();
+      if(flipHistory && location.hash!==`#${pages[current].id}`){
+        history.pushState({page:pages[current].id},'',`#${pages[current].id}`);
+      }
+      flipHistory=true;
+    });
+    realFlipbook=flipbook;
+    flipbookSize={width,height};
+    book.classList.add('has-real-pageflip');
+  }catch(e){
+    // Keine teilweise initialisierte Darstellung zurücklassen.
+    try{root.remove()}catch(_){}
+    realFlipbook=null;
+    console.warn('Realistischer Blättereffekt nicht verfügbar. Standardanimation bleibt aktiv.',e);
+  }
+}
+setupRealPageFlip();
+
+let flipResizeTimer=null;
+window.addEventListener('resize',()=>{
+  if(!realFlipbook)return;
+  const width=Math.round(book.getBoundingClientRect().width);
+  const height=Math.round(book.getBoundingClientRect().height);
+  if(Math.abs(width-flipbookSize.width)<18 && Math.abs(height-flipbookSize.height)<12)return;
+  clearTimeout(flipResizeTimer);
+  flipResizeTimer=setTimeout(()=>{
+    if(!realFlipbook)return;
+    // Bei Orientierungswechsel die HTML-Seiten in den neuen Dimensionen
+    // aufbauen; zwischendurch bleibt das normale Buch sichtbar.
+    const index=current;
+    book.classList.remove('has-real-pageflip');
+    try{realFlipbook.destroy()}catch(e){}
+    realFlipbook=null;
+    const root=document.getElementById('real-pageflip');
+    if(root)root.remove();
+    current=index;
+    paint(current);syncControls();
+    setupRealPageFlip();
+  },180);
+});
+
