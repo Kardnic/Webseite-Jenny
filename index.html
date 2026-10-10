@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10253a">
+  <meta name="description" content="MUHR Immobilien – mehr als Immobilien. Vermittlung, Immobilienservice &amp; Verwaltungsunterstützung und Projektmanagement in Gressenich und Umgebung.">
+  <title>MUHR Immobilien · Zuhause weiterdenken</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/muhr-favicon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#buch">Zum Buch springen</a>
+  <div class="site-wrap">
+    <header class="site-header">
+      <a class="brand" href="#start" data-chapter="start" aria-label="MUHR Immobilien – zur Startseite">
+        <img class="brand-logo" src="assets/muhr-logo.webp" alt="MUHR Immobilien" width="910" height="1195" decoding="async">
+      </a>
+      <nav class="chapter-nav" aria-label="Kapitel auswählen">
+        <a href="#start" data-chapter="start">Startseite</a>
+        <a href="#leistungen" data-chapter="leistungen">Leistungen</a>
+        <a href="#vermittlung" data-chapter="vermittlung">Vermittlung</a>
+        <a href="#verwaltung" data-chapter="verwaltung">Immobilienservice &amp; Verwaltungsunterstützung</a>
+        <a href="#projekte" data-chapter="projekte">Projekte</a>
+        <a href="#ueber" data-chapter="ueber">Über mich</a>
+        <a href="#kontakt" data-chapter="kontakt">Kontakt</a>
+      </nav>
+      <a class="header-contact" href="#kontakt" data-chapter="kontakt">Gespräch vereinbaren <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="book-main" id="buch">
+      <div class="book-intro">
+        <p class="eyebrow"><span class="intro-line" aria-hidden="true"></span> REGIONAL <span class="sep">·</span> PERSÖNLICH <span class="sep">·</span> VERLÄSSLICH</p>
+        <p class="book-instruction">Eine Immobilie. Viele Geschichten. <em>Blättern Sie weiter.</em></p>
+      </div>
+      <section class="book-stage" aria-label="Interaktives Immobilienbuch mit einer Seite" aria-roledescription="Digitales Buch">
+        <div class="book-back" aria-hidden="true"></div>
+        <div id="book" class="book-frame" aria-live="off">
+          <div id="book-current" class="paper-current"></div>
+          <div id="page-reveal-shade" class="page-reveal-shade" aria-hidden="true"></div>
+          <div id="page-cast-shadow" class="page-cast-shadow" aria-hidden="true"></div>
+          <div id="book-turn" class="turn-leaf" aria-hidden="true" hidden>
+            <div id="leaf-front" class="turn-leaf-face turn-leaf-front"></div>
+            <div class="leaf-paper-edge" aria-hidden="true"></div>
+            <div id="leaf-back" class="turn-leaf-face turn-leaf-back">
+              <div class="leaf-back-ornament"><img src="assets/muhr-logo.webp" alt="" loading="eager" aria-hidden="true"><small>ZUHAUSE WEITERDENKEN.</small></div>
+            </div>
+          </div>
+          <div class="spine-shadow" aria-hidden="true"></div>
+          <div class="page-edge" aria-hidden="true"></div>
+          <button id="page-corner" class="page-corner" type="button" aria-label="Nächste Buchseite umblättern"><span aria-hidden="true">›</span></button>
+        </div>
+      </section>
+      <div class="book-controls">
+        <button id="prev" type="button" class="turn-control"><span class="arrow" aria-hidden="true">←</span><span>Zurückblättern</span></button>
+        <div class="page-position" aria-live="polite" aria-atomic="true"><span id="chapter-name">Willkommen</span><span class="position-rule"></span><span id="page-number">01 / 10</span></div>
+        <button id="next" type="button" class="turn-control"><span>Weiterblättern</span><span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+      <p class="gesture-tip">Mit den Pfeiltasten, per Wischgeste oder durch Auswahl eines Kapitels blättern.</p>
+    </main>
+    <footer class="footer"><span>© <span id="year"></span> MUHR Immobilien</span><span>PLANEN <b>·</b> KOORDINIEREN <b>·</b> UMSETZEN</span><span>Impressum & Datenschutz vor Veröffentlichung ergänzen</span></footer>
+  </div>
+  <script src="script.js" defer></script>
+</body>
+</html>
