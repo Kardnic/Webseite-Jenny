@@ -22,6 +22,7 @@ const revealShade = document.getElementById('page-reveal-shade');
 const castShadow = document.getElementById('page-cast-shadow');
 const corner = document.getElementById('page-corner');
 const book = document.getElementById('book');
+const bookStage = document.querySelector('.book-stage');
 const leftPage = document.getElementById('book-left');
 const nextButton = document.getElementById('next');
 const prevButton = document.getElementById('prev');
@@ -74,7 +75,9 @@ function updatePaperLayers(index) {
     Math.round(5 + 13 * remaining / Math.max(1, pages.length - 1));
   book.classList.toggle('has-right-pages', remaining > 0);
   book.style.setProperty('--remaining-stack-width', `${stackWidth}px`);
-  // Die beige Rückseite bleibt links im aufgeschlagenen Buch bestehen.
+  // Die erste Seite ist geschlossen und zentriert. Erst beim ersten
+  // Umblättern öffnet sich das links sichtbare beige Rückseitenblatt.
+  bookStage.classList.toggle('is-cover', index === 0);
   leftPage.dataset.turned = String(index);
 }
 function paint(index){
@@ -116,9 +119,12 @@ async function goTo(target,changeHistory=true){
  // Die animierte rechte Buchseite wird beim Umklappen an die Breite
  // des dauerhaft sichtbaren linken Blattes angepasst. So ragt sie
  // am Ende der Bewegung nicht weit aus dem geöffneten Buch heraus.
- const leftWidth = leftPage.getBoundingClientRect().width;
  const rightWidth = Math.max(1, book.getBoundingClientRect().width);
- const foldedScale = Math.min(1, Math.max(.06, leftWidth / rightWidth));
+ // Wenn die erste Seite aufklappt, ist das linke Blatt am Anfang der
+ // CSS-Transition noch 0px breit. Den Endwert hier bereits berücksichtigen.
+ const leftWidth = Math.max(leftPage.getBoundingClientRect().width,
+   rightWidth * (window.innerWidth <= 650 ? .035 : .25));
+ const foldedScale = Math.min(1, Math.max(.035, leftWidth / rightWidth));
  const pose = (angle, scale=1) => `perspective(1800px) rotateY(${angle}deg) scaleX(${scale})`;
  const forwardFrames=[
   {transform:pose(0),offset:0,easing:'cubic-bezier(.40,0,.67,.25)'},
