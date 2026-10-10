@@ -335,3 +335,20 @@ html,body{max-width:100%;overflow-x:clip}
   .single-contact-copy .hand-title { font-size: 33px; }
   .single-contact-copy .copy { font-size: 11px; }
 }
+
+
+/* V11: Android vertical page swipe through book surface */
+/* The former .page-body overscroll-behavior:none blocked scroll chaining
+   from the book to the document on Android. A book page is not a
+   separately scrollable panel, so its clipping must not trap gestures. */
+@media (pointer: coarse) {
+  .book-stage,
+  .book-frame,
+  .paper-current,
+  .page,
+  .page-body {
+    touch-action: pan-y pinch-zoom;
+  }
+  .page-body { overscroll-behavior: auto; overflow: clip; }
+  .paper-current { overflow: clip; }
+}
