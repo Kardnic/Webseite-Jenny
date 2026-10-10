@@ -1192,3 +1192,78 @@ html,body{max-width:100%;overflow-x:clip}
 @media(prefers-reduced-motion:reduce) {
   .book-frame .turned-pages {transition:none}
 }
+
+
+/* V26: Erste Buchseite mittig, beim Aufklappen sanft nach rechts */
+/* Der geöffnete Doppelseitenverbund ist insgesamt zentriert.
+   Die rechte Leseseite behält eine angenehme Maximalbreite, während links
+   die beige Blattrückseite Platz bekommt. */
+.book-stage {
+  justify-content: center;
+}
+.book-stage > .book-frame {
+  flex: 0 1 1120px;
+  max-width: 1120px;
+  transition:
+    border-radius .55s ease,
+    box-shadow .55s ease,
+    transform .75s cubic-bezier(.22,.72,.24,1);
+}
+.book-left-page {
+  transition:
+    flex-basis .85s cubic-bezier(.22,.72,.24,1),
+    width .85s cubic-bezier(.22,.72,.24,1),
+    opacity .4s ease;
+}
+.book-stage.is-cover > .book-left-page {
+  flex: 0 0 0px;
+  width: 0;
+  min-width: 0;
+  opacity: 0;
+  border: 0;
+  box-shadow: none;
+}
+.book-stage.is-cover > .book-frame {
+  flex: 0 1 1120px;
+  max-width: 1120px;
+  border-radius: 9px;
+  box-shadow:
+    0 18px 34px rgba(55,38,25,.16),
+    inset 0 0 0 1px rgba(167,137,110,.16);
+}
+.book-stage.is-cover .paper-current {
+  border-radius: 9px;
+}
+.book-stage.is-cover .spine-shadow {
+  opacity: .18;
+}
+.book-stage:not(.is-cover) .spine-shadow {
+  opacity: 1;
+}
+/* Die Seitenecken und der verbleibende rechte Papierstapel bleiben auf
+   dem Einband sichtbar; links liegt erst nach dem Aufschlagen Papier. */
+@media(max-width:650px) {
+  .book-stage {justify-content: initial}
+  .book-stage > .book-frame {
+    max-width: none;
+    width: 100%;
+  }
+  .book-stage.is-cover > .book-frame {
+    max-width: none;
+    width: 100%;
+    transform: translateX(-3px);
+    border-radius: 7px;
+  }
+  .book-stage.is-cover .paper-current {border-radius: 7px}
+  .book-stage.is-cover > .book-left-page {
+    width: 0;
+    border: 0;
+    box-shadow: none;
+  }
+}
+@media(prefers-reduced-motion: reduce) {
+  .book-stage > .book-frame,
+  .book-left-page {
+    transition: none;
+  }
+}
