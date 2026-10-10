@@ -464,3 +464,38 @@ html,body{max-width:100%;overflow-x:clip}
   .legal-end{gap:12px}
   .footer-legal{flex-wrap:wrap}
 }
+
+
+/* V15: Geplante Immobilienvermittlung transparent kennzeichnen. */
+.nav-coming-soon {
+ display: inline-block;
+ font-size: .82em;
+ font-weight: 600;
+ letter-spacing: .01em;
+ color: #9a6c43;
+ white-space: nowrap;
+}
+.coming-soon-inline {
+ display: block;
+ margin-top: 3px;
+ font: 600 12px/1.3 var(--sans);
+ letter-spacing: .01em;
+ color: #9a6c43;
+ overflow-wrap: normal;
+}
+.offer-unavailable {
+ display: inline-block;
+ font: 600 12px/1.4 var(--sans);
+ color: var(--navy);
+ max-width: 275px;
+}
+@media(max-width:650px) {
+ .coming-soon-inline { font-size: 10px; line-height: 1.1; margin-top: 2px; }
+ .service-tile:has(.coming-soon-inline) h3 { font-size: 20px; line-height: 1.1; }
+ .service-tile:has(.coming-soon-inline) p { font-size: 9.5px; }
+ .offer-unavailable { font-size: 10px; }
+}
+@media(max-width:390px){
+ .nav-coming-soon { font-size: .78em; }
+ .service-tile:has(.coming-soon-inline) h3 { font-size: 19px; }
+}
