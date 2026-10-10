@@ -220,3 +220,56 @@ html,body{max-width:100%;overflow-x:clip}
   .service-intro-admin .hand-title{font-size:37px;}
   .service-intro-admin .lead{font-size:10.8px;line-height:1.45;margin-bottom:13px;}
 }
+
+
+/* V9 | Geprüfte Korrekturen von Zeilenumbrüchen und Leistungs-Kacheln.
+   Buchseiten bleiben ohne innere Scrollbereiche. */
+.service-head .chapter-heading,
+.service-tile h3,
+#book[data-chapter="projekte"] .service-intro-copy .chapter-heading {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+.service-tile h3 {
+  font-size: clamp(22px, 2.2vw, 32px);
+  letter-spacing: -.035em;
+}
+#book[data-chapter="projekte"] .service-intro-copy .chapter-heading {
+  font-size: clamp(37px, 3.7vw, 54px);
+  line-height: 1.02;
+}
+@media (max-width: 850px) {
+  .service-tile h3 { font-size: 24px; }
+  #book[data-chapter="projekte"] .service-intro-copy .chapter-heading { font-size: 38px; }
+}
+@media (max-width: 650px) {
+  .service-tile {
+    grid-template-rows: auto auto auto;
+    align-content: center;
+    row-gap: 3px;
+    min-height: 108px;
+    padding-block: 10px;
+  }
+  .service-tile h3 {
+    font-size: 22px;
+    line-height: 1.05;
+    align-self: auto;
+    margin: 0;
+  }
+  .service-tile p { align-self: auto; }
+  .service-tile-admin h3 { font-size: 18px; line-height: 1.07; }
+  #book[data-chapter="projekte"] .service-intro-copy .chapter-heading {
+    font-size: clamp(30px, 8vw, 40px);
+  }
+}
+@media (max-width: 390px) {
+  .service-head .chapter-heading { font-size: 30px; line-height: 1.05; }
+  .service-head .hand-title { font-size: 33px; }
+  .service-tiles { gap: 0; }
+  .service-tile { grid-template-columns: 70px minmax(0, 1fr); column-gap: 10px; }
+  .tile-photo { height: 70px; }
+  .service-tile h3 { font-size: 20px; }
+  .service-tile-admin h3 { font-size: 17px; }
+  #book[data-chapter="projekte"] .service-intro-copy .chapter-heading { font-size: 29px; }
+}
