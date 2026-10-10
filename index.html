@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/muhr-favicon.png">
-  <link rel="stylesheet" href="styles.css?v=buchfalten-v27">
+  <link rel="stylesheet" href="styles.css?v=einzelseite-v28">
 </head>
 <body>
   <a class="skip-link" href="#buch">Zum Buch springen</a>
@@ -64,21 +64,12 @@
         <p class="eyebrow">REGIONAL <span class="sep">·</span> PERSÖNLICH <span class="sep">·</span> VERLÄSSLICH</p>
         <p class="book-instruction">Eine Immobilie. Viele Geschichten. <em>Blättern Sie weiter.</em></p>
       </div>
-      <section class="book-stage is-cover" aria-label="Digitales Immobilienbuch: erst einzeln, nach dem Aufblättern links die beige Blattrückseite und rechts die aktuelle Buchseite" aria-roledescription="Digitales Buch">
+      <section class="book-stage" aria-label="Interaktives Immobilienbuch mit einer Seite" aria-roledescription="Digitales Buch">
         <div class="book-back" aria-hidden="true"></div>
-        <div id="book-left" class="book-left-page" aria-hidden="true">
-          <div class="left-page-paper">
-            <div class="left-page-stamp">
-              <img src="assets/muhr-logo.webp" alt="" loading="lazy">
-              <small>ZUHAUSE WEITERDENKEN.</small>
-            </div>
-          </div>
-        </div>
         <div id="book" class="book-frame" aria-live="off">
           <div id="book-current" class="paper-current"></div>
           <div id="page-reveal-shade" class="page-reveal-shade" aria-hidden="true"></div>
           <div id="page-cast-shadow" class="page-cast-shadow" aria-hidden="true"></div>
-          <div id="turned-pages" class="turned-pages" aria-hidden="true"></div>
           <div id="book-turn" class="turn-leaf" aria-hidden="true" hidden>
             <div id="leaf-front" class="turn-leaf-face turn-leaf-front"></div>
             <div class="leaf-paper-edge" aria-hidden="true"></div>
@@ -86,7 +77,6 @@
               <div class="leaf-back-ornament"><img src="assets/muhr-logo.webp" alt="" loading="eager" aria-hidden="true"><small>ZUHAUSE WEITERDENKEN.</small></div>
             </div>
           </div>
-          <div id="page-fold" class="page-fold" aria-hidden="true" hidden></div>
           <div class="spine-shadow" aria-hidden="true"></div>
           <div class="page-edge" aria-hidden="true"></div>
           <button id="page-corner" class="page-corner" type="button" aria-label="Nächste Buchseite umblättern"><span aria-hidden="true">›</span></button>
@@ -101,6 +91,6 @@
     </main>
     <footer class="footer"><span>© <span id="year"></span> MUHR Immobilien</span><span>PLANEN <b>·</b> KOORDINIEREN <b>·</b> UMSETZEN</span><span class="footer-legal"><a href="impressum.html">Impressum</a><span aria-hidden="true">·</span><a href="datenschutz.html">Datenschutz</a></span></footer>
   </div>
-  <script src="script.js?v=buchfalten-v27" defer></script>
+  <script src="script.js?v=einzelseite-v28" defer></script>
 </body>
 </html>
