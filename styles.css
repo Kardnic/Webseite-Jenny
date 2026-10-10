@@ -1021,3 +1021,39 @@ html,body{max-width:100%;overflow-x:clip}
 @media (prefers-reduced-motion: reduce) {
   .turned-pages { transition: none; }
 }
+
+
+/* V21: Beige Blattreste am Buchrücken deutlicher sichtbar */
+.turned-pages {
+  left: -7px;
+  top: 5px;
+  bottom: 7px;
+  z-index: 5;
+  border-right: 2px solid rgba(149,103,68,.8);
+  border-radius: 3px 11px 9px 3px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0 4px,
+      rgba(109,78,49,.24) 4px 5px),
+    linear-gradient(90deg,
+      #c3a184 0%, #d4b99c 19%, #f8e9d8 40%,
+      #e8ceb2 64%, #bd9a7d 83%, #e7d1b8 100%);
+  box-shadow:
+    inset -4px 0 6px rgba(98,60,37,.19),
+    4px 1px 11px rgba(72,44,26,.23);
+  clip-path: polygon(
+    0 0, 87% 0, 100% 9px,
+    97% 10%, 72% 18%, 66% 50%,
+    72% 82%, 97% 90%,
+    100% calc(100% - 9px), 85% 100%, 0 100%
+  );
+}
+.book-frame.has-turned-pages .turned-pages { opacity: 1; }
+@media (max-width:650px) {
+  .turned-pages {
+    left:-5px;
+    width:min(var(--turned-stack-width, 0px), 45px);
+    top:5px;
+    bottom:6px;
+  }
+}
