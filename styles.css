@@ -971,38 +971,224 @@ html,body{max-width:100%;overflow-x:clip}
   .career-focus h3 {font-size:23px}
 }
 
-/* V24: Die beige Rückseite der umgeblätterten Blätter bleibt als sanfte
-   Außenkante an der RECHTEN Buchseite sichtbar – nicht am Buchrücken links.
-   Sie ragt höchstens wenige Pixel über die Blattfläche, nie über den Inhalt. */
-.turned-pages {
-  position:absolute;
-  z-index:5;
-  pointer-events:none;
-  left:auto;
-  right:-15px;
-  top:8px;
-  bottom:9px;
-  width:var(--turned-stack-width, 0px);
-  opacity:0;
-  border-radius:1px 8px 7px 1px;
-  border-right:1px solid rgba(140,109,78,.28);
-  background:
-    repeating-linear-gradient(90deg,rgba(255,252,247,0) 0 3px,rgba(116,83,55,.08) 3px 4px),
-    linear-gradient(90deg,#ead8c3 0%,#f9f1e8 19%,#ead9c6 48%,#dcc4ab 83%,#f6e9db 100%);
-  box-shadow:4px 1px 7px rgba(61,41,28,.12),inset -2px 0 4px rgba(93,66,41,.09);
-  transition:width .28s ease,opacity .28s ease;
+/* V25 – Aufgeschlagenes Buch mit echter linker Blattrückseite.
+   Der rechte Papierstapel wird von der verbliebenen Seitenzahl gesteuert.
+   Alle Originalinhalte bleiben vollständig auf der rechten Leseseite. */
+:root {
+  --book-left-width: clamp(235px,22vw,340px);
+  --remaining-stack-width: 18px;
 }
-.book-frame.has-turned-pages .turned-pages {opacity:.93}
-.book-frame.is-turning .turned-pages {opacity:.55}
+.book-main {
+  width: min(1600px,calc(100% - 30px));
+}
+.book-stage {
+  display: flex;
+  align-items: stretch;
+  padding: 0 22px 13px 12px;
+  isolation: isolate;
+  overflow: visible;
+  perspective: 2300px;
+  perspective-origin: 46% 47%;
+}
+.book-stage > .book-back {
+  display: none;
+}
+.book-left-page {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 var(--book-left-width);
+  width: var(--book-left-width);
+  height: var(--book-height);
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 11px 0 0 8px;
+  border: 1px solid #d3bfa9;
+  border-right: 0;
+  background:
+    repeating-linear-gradient(to bottom,
+      rgba(122,91,63,.035) 0px, rgba(122,91,63,.035) 1px,
+      transparent 1px, transparent 5px),
+    linear-gradient(92deg,
+      #d5bea6 0%,#e4ceb7 4%,#f6e9d9 17%,
+      #f9eee1 52%,#e8d3bf 84%,#bca187 100%);
+  box-shadow:
+    inset 10px 0 15px rgba(116,87,62,.15),
+    inset -15px 0 21px rgba(78,52,33,.15),
+    -9px 13px 22px rgba(67,46,30,.12),
+    0 12px 24px rgba(67,46,30,.10);
+}
+.book-left-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 36% 34%, rgba(255,255,255,.28),transparent 58%),
+    linear-gradient(90deg,rgba(116,85,61,.08),transparent 13%,transparent 85%,rgba(90,61,40,.08));
+}
+.book-left-page::after {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  pointer-events: none;
+  background: linear-gradient(to right,
+    transparent,rgba(105,72,45,.055) 35%,
+    rgba(58,42,29,.18) 100%);
+}
+.left-page-paper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.left-page-stamp {
+  position: absolute;
+  top: 35%;
+  left: 9%;
+  right: 9%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  pointer-events: none;
+}
+.left-page-stamp img {
+  display: block;
+  width: min(115px,48%);
+  height: auto;
+  opacity: .20;
+  filter: sepia(.65) saturate(.5);
+  object-fit: contain;
+}
+.left-page-stamp small {
+  font: 600 9px/1.4 var(--sans);
+  letter-spacing: .19em;
+  color: rgba(105,80,57,.40);
+}
+.book-stage > .book-frame {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: var(--book-height);
+  isolation: isolate;
+  overflow: visible;
+  border-radius: 0 10px 10px 0;
+  box-shadow:
+    inset 1px 0 rgba(94,65,45,.13),
+    7px 0 13px rgba(55,38,25,.12),
+    0 15px 28px rgba(55,38,25,.12);
+}
+.book-frame .paper-current {
+  border-radius: 0 10px 10px 0;
+}
+.book-frame .spine-shadow {
+  left: 0;
+  width: 24px;
+  z-index: 10;
+  background: linear-gradient(to right,
+    rgba(62,42,31,.30) 0%,rgba(91,67,51,.13) 28%,transparent 100%);
+}
+.book-frame .turn-leaf {
+  transform-origin: 0 50%;
+}
+.book-frame .turn-leaf-face {
+  border-radius: 0 9px 9px 0;
+}
+/* Echte Außenkante des noch nicht umgeblätterten rechten Papierstapels.
+   Positioniert jenseits der Inhaltsfläche; verschwindet auf der letzten Seite. */
+.book-frame .turned-pages {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  left: 100%;
+  right: auto;
+  top: 5px;
+  bottom: 7px;
+  width: var(--remaining-stack-width,0px);
+  max-width: 21px;
+  opacity: 0;
+  border-radius: 0 6px 6px 0;
+  border-right: 1px solid rgba(127,94,64,.45);
+  background:
+    repeating-linear-gradient(to right,
+      #f8ede0 0 2px,#d3bda8 2px 3px,
+      #fdf5ec 3px 5px,#cfb69b 5px 6px),
+    linear-gradient(to right,#f8eee3,#e6d2bc);
+  box-shadow:
+    4px 3px 8px rgba(66,43,25,.16),
+    inset -2px 0 4px rgba(107,75,48,.12);
+  clip-path: none;
+  transition: width .75s ease-out,opacity .3s ease;
+}
+.book-frame.has-right-pages .turned-pages {
+  opacity: 1;
+}
+.book-frame.is-turning .turned-pages {
+  opacity: .82;
+}
+.book-frame .page-edge {
+  opacity: 1;
+  transition: opacity .3s ease;
+}
+.book-frame:not(.has-right-pages) .page-edge {
+  opacity: 0;
+}
+@media(max-width:1120px) {
+  :root {--book-left-width:clamp(155px,19vw,240px)}
+  .book-main {width:calc(100% - 22px)}
+  .book-stage {padding-right:19px}
+}
+@media(max-width:850px) {
+  :root {--book-left-width:clamp(108px,16vw,145px)}
+  .book-stage {padding-inline:8px 18px}
+  .left-page-stamp img {width:min(78px,58%)}
+  .left-page-stamp small {font-size:7px;letter-spacing:.11em}
+}
 @media(max-width:650px) {
-  .turned-pages {
-    right:-10px;
-    top:5px;
-    bottom:6px;
-    width:min(var(--turned-stack-width,0px),12px);
-    border-radius:1px 5px 5px 1px;
+  /* Auf Mobilgeräten wird die linke Buchseite zum schmalen Vorsatzblatt:
+     der rechte Lesebereich behält damit die komplette Textbreite. */
+  .book-main {width:calc(100% - 18px)}
+  .book-stage {
+    display:block;
+    padding:0 11px 13px 6px;
+    perspective:1450px;
   }
+  .book-left-page {
+    position:absolute;
+    left:-9px;
+    top:0;
+    height:var(--book-height);
+    width:clamp(12px,3vw,17px);
+    border-radius:5px 0 0 5px;
+    z-index:1;
+  }
+  .book-left-page::after {width:5px}
+  .left-page-stamp {display:none}
+  .book-stage > .book-frame {
+    width:100%;
+    min-width:0;
+    border-radius:0 7px 7px 0;
+    z-index:2;
+  }
+  .book-frame .turned-pages {
+    max-width:12px;
+    top:4px;
+    bottom:5px;
+    border-radius:0 4px 4px 0;
+  }
+  .book-frame .spine-shadow {width:12px}
+}
+@media(max-width:360px) {
+  .book-stage {padding:0 9px 13px 5px}
+  .book-left-page {left:-8px;width:12px}
+  .book-frame .turned-pages {max-width:9px}
 }
 @media(prefers-reduced-motion:reduce) {
-  .turned-pages {transition:none}
+  .book-frame .turned-pages {transition:none}
 }
