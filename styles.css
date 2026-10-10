@@ -971,89 +971,37 @@ html,body{max-width:100%;overflow-x:clip}
   .career-focus h3 {font-size:23px}
 }
 
-
-/* V20: Umgeblätterte beige Rückseiten bleiben als Papierstapel sichtbar */
-/* Aufgeschlagene Buchseiten zeigen links die bereits umgeblätterten Blätter.
-   Der Papierstapel liegt unter dem animierten Blatt und unter dem Buchrücken. */
+/* V22: Dezente, bündige Papierlagen entlang des Buchrückens.
+   Keine großen beigen Flächen, keine zackige Kante und keine Textüberlagerung. */
 .turned-pages {
-  position: absolute;
-  z-index: 5;
-  pointer-events: none;
-  top: 8px;
-  bottom: 10px;
-  left: -8px;
-  width: var(--turned-stack-width, 0px);
-  opacity: 0;
-  border-right: 1px solid rgba(132, 101, 72, .45);
-  border-radius: 3px 13px 10px 3px;
+  position:absolute;
+  z-index:4;
+  pointer-events:none;
+  left:12px;
+  top:5px;
+  bottom:6px;
+  width:var(--turned-stack-width, 0px);
+  opacity:0;
+  border-radius:0 3px 3px 0;
+  border-right:1px solid rgba(157,129,102,.32);
   background:
     repeating-linear-gradient(90deg,
-      transparent 0, transparent 3px,
-      rgba(102, 74, 52, .15) 3px, rgba(102, 74, 52, .15) 4px),
-    linear-gradient(90deg,
-      #cbb5a0 0%, #e3d0bc 24%, #f3e7da 51%,
-      #ddc5ae 78%, #faf0e2 100%);
-  box-shadow:
-    inset -4px 0 5px rgba(108, 80, 55, .16),
-    4px 0 9px rgba(65, 44, 28, .18);
-  clip-path: polygon(
-    0 0, 77% 0, 98% 5px,
-    95% 24%, 100% 48%, 95% 77%,
-    98% calc(100% - 7px), 79% 100%, 0 100%
-  );
-  transition: width .28s ease, opacity .28s ease;
+      transparent 0px, transparent 3px,
+      rgba(149,124,101,.10) 3px, rgba(149,124,101,.10) 4px),
+    linear-gradient(90deg,#eadbc9 0%,#f4e9dc 68%,#e6d4bf 100%);
+  box-shadow:1px 0 3px rgba(74,56,39,.09);
+  transition:width .28s ease,opacity .28s ease;
 }
-.book-frame.has-turned-pages .turned-pages {
-  opacity: .96;
-}
-.book-frame.is-turning .turned-pages {
-  opacity: .8;
-}
-@media (max-width: 650px) {
+.book-frame.has-turned-pages .turned-pages { opacity:.85; }
+.book-frame.is-turning .turned-pages { opacity:.65; }
+@media(max-width:650px) {
   .turned-pages {
-    left: -5px;
-    top: 7px;
-    bottom: 7px;
-    width: min(var(--turned-stack-width, 0px), 26px);
-    border-radius: 2px 8px 8px 2px;
+    left:12px;
+    top:4px;
+    bottom:5px;
+    border-right-color:rgba(157,129,102,.24);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .turned-pages { transition: none; }
-}
-
-
-/* V21: Beige Blattreste am Buchrücken deutlicher sichtbar */
-.turned-pages {
-  left: -7px;
-  top: 5px;
-  bottom: 7px;
-  z-index: 5;
-  border-right: 2px solid rgba(149,103,68,.8);
-  border-radius: 3px 11px 9px 3px;
-  background:
-    repeating-linear-gradient(90deg,
-      transparent 0 4px,
-      rgba(109,78,49,.24) 4px 5px),
-    linear-gradient(90deg,
-      #c3a184 0%, #d4b99c 19%, #f8e9d8 40%,
-      #e8ceb2 64%, #bd9a7d 83%, #e7d1b8 100%);
-  box-shadow:
-    inset -4px 0 6px rgba(98,60,37,.19),
-    4px 1px 11px rgba(72,44,26,.23);
-  clip-path: polygon(
-    0 0, 87% 0, 100% 9px,
-    97% 10%, 72% 18%, 66% 50%,
-    72% 82%, 97% 90%,
-    100% calc(100% - 9px), 85% 100%, 0 100%
-  );
-}
-.book-frame.has-turned-pages .turned-pages { opacity: 1; }
-@media (max-width:650px) {
-  .turned-pages {
-    left:-5px;
-    width:min(var(--turned-stack-width, 0px), 45px);
-    top:5px;
-    bottom:6px;
-  }
+@media(prefers-reduced-motion:reduce) {
+  .turned-pages {transition:none;}
 }
