@@ -675,3 +675,20 @@ html,body{max-width:100%;overflow-x:clip}
   .about-redesign .about-story .copy {font-size:10.3px;line-height:1.38}
   .about-values span {font-size:7.6px;padding:4px 6px}
 }
+
+
+/* V16a: Caption-Kinder von alter Bildzitat-Regel ausnehmen */
+.about-redesign .about-photo-caption > span {
+  position: static;
+  inset: auto;
+  text-shadow: none;
+  color: inherit;
+  font: 700 10px/1.45 var(--sans);
+  font-style: normal;
+  letter-spacing: .15em;
+}
+.about-redesign .about-photo-caption > .about-caption-rule {
+  flex: 0 0 26px;
+  height: 1px;
+  background: #e3ccb4;
+}
