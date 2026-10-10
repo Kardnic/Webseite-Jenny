@@ -88,9 +88,22 @@ function finish(target,changeHistory){
 async function goTo(target,changeHistory=true){
  if(!Number.isInteger(target)||target<0||target>=pages.length)return;
  if(realFlipbook){
-   if(target===current)return;
+   // Die Bibliothek unterstützt zwei echte Blätterrichtungen:
+   // rechts -> links beim Weiterblättern, links -> rechts beim Zurückblättern.
+   // Die expliziten Methoden sorgen auch in der Einzelseitenansicht dafür,
+   // dass der jeweils richtige Blattrand umgeschlagen wird.
+   const shown=realFlipbook.getCurrentPageIndex();
+   if(target===shown)return;
    flipHistory=changeHistory;
-   realFlipbook.flip(target,'bottom');
+   if(target===shown+1){
+     realFlipbook.flipNext('bottom');
+   }else if(target===shown-1){
+     realFlipbook.flipPrev('bottom');
+   }else{
+     // Beim Sprung über mehrere Seiten bestimmt die Bibliothek die
+     // Richtung anhand der Zielseite.
+     realFlipbook.flip(target,'bottom');
+   }
    return;
  }
  if(animating){pending={index:target,changeHistory};return;}
