@@ -18,13 +18,10 @@ const pages = [
 const currentPage = document.getElementById('book-current');
 const leaf = document.getElementById('book-turn');
 const leafFront = document.getElementById('leaf-front');
-const pageFold = document.getElementById('page-fold');
 const revealShade = document.getElementById('page-reveal-shade');
 const castShadow = document.getElementById('page-cast-shadow');
 const corner = document.getElementById('page-corner');
 const book = document.getElementById('book');
-const bookStage = document.querySelector('.book-stage');
-const leftPage = document.getElementById('book-left');
 const nextButton = document.getElementById('next');
 const prevButton = document.getElementById('prev');
 const chapterName = document.getElementById('chapter-name');
@@ -69,23 +66,7 @@ function markup(index){
  if(id==='kontakt') return page(`<div class="single-contact"><div class="single-contact-copy"><span class="eyebrow">LASSEN SIE UNS INS GESPRÄCH KOMMEN</span><h2 class="chapter-heading">Lassen Sie uns<br>sprechen.</h2><div class="hand-title">Ganz persönlich.</div><span class="rule"></span><p class="copy">Sie haben Fragen, Pläne oder eine konkrete Idee? Ich freue mich darauf, von Ihnen zu hören.</p><div class="contact-options"><a href="tel:+491632513195"><b aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.91.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.25a2 2 0 0 1 2.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92Z"/></svg></b>0163-2513195</a><a href="mailto:info@muhr-immobilien.de"><b aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></b>info@muhr-immobilien.de</a><a href="https://www.google.de/maps/dir//Hamicher+Weg+31,+52224+Stolberg+(Rheinland)-Gressenich/@50.7762467,6.2991409,17z/data=!4m18!1m8!3m7!1s0x47bf616a6fd9b60b:0xc52910fc8f63899b!2sHamicher+Weg+31,+52224+Stolberg+(Rheinland)-Gressenich!3b1!8m2!3d50.7762468!4d6.3040118!16s%2Fg%2F11c5mdpmn0!4m8!1m0!1m5!1m1!1s0x47bf616a6fd9b60b:0xc52910fc8f63899b!2m2!1d6.3040118!2d50.7762468!3e0?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer"><b aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></b>Hier finden Sie mich</a><a href="https://www.instagram.com/muhr.immobilien/" target="_blank" rel="noopener noreferrer"><b aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></b>@muhr.immobilien</a></div><a class="btn" href="mailto:info@muhr-immobilien.de?subject=Anfrage%20%C3%BCber%20die%20Webseite">E-Mail schreiben <span aria-hidden="true">↗</span></a></div><div class="single-contact-picture">${image('hortensien','Blaue Hortensien in einer Vase')}</div></div>`,index);
  return page('',index);
 }
-function updatePaperLayers(index) {
-  // Rechter Stapel: 10 Blätter am Anfang, null auf der letzten Buchseite.
-  const remaining = Math.max(0, pages.length - index - 1);
-  const stackWidth = remaining === 0 ? 0 :
-    Math.round(5 + 13 * remaining / Math.max(1, pages.length - 1));
-  book.classList.toggle('has-right-pages', remaining > 0);
-  book.style.setProperty('--remaining-stack-width', `${stackWidth}px`);
-  // Die erste Seite ist geschlossen und zentriert. Erst beim ersten
-  // Umblättern öffnet sich das links sichtbare beige Rückseitenblatt.
-  bookStage.classList.toggle('is-cover', index === 0);
-  leftPage.dataset.turned = String(index);
-}
-function paint(index){
-  book.dataset.chapter=pages[index].chapter;
-  currentPage.innerHTML=markup(index);
-  updatePaperLayers(index);
-}
+function paint(index){book.dataset.chapter=pages[index].chapter;currentPage.innerHTML=markup(index);}
 function syncControls(){
  chapterName.textContent=pages[current].title;
  pageNumber.textContent=`${String(current+1).padStart(2,'0')} / ${String(pages.length).padStart(2,'0')}`;
@@ -96,7 +77,7 @@ function syncControls(){
  });
 }
 function finish(target,changeHistory){
- current=target;paint(current);leaf.hidden=true;leaf.className='turn-leaf';leafFront.innerHTML='';pageFold.hidden=true;book.classList.remove('is-turning');animating=false;
+ current=target;paint(current);leaf.hidden=true;leaf.className='turn-leaf';leafFront.innerHTML='';book.classList.remove('is-turning');animating=false;
  activeAnimations.forEach(a=>a.cancel());activeAnimations=[];revealShade.style.opacity='0';castShadow.style.opacity='0';syncControls();
  if(changeHistory && location.hash!==`#${pages[current].id}`) history.pushState({page:pages[current].id},'',`#${pages[current].id}`);
  if(pending!==null){const next=pending;pending=null;if(next.index!==current)goTo(next.index,next.changeHistory);}
@@ -105,77 +86,45 @@ async function goTo(target,changeHistory=true){
  if(!Number.isInteger(target)||target<0||target>=pages.length)return;
  if(animating){pending={index:target,changeHistory};return;}
  if(target===current)return;
- if(prefersReducedMotion.matches){finish(target,changeHistory);return;}
  const forward=target>current;
- animating=true;
-
- // Die erste Seite wird zuerst aufgeschlagen. Die seitliche Bewegung
- // ist fertig, BEVOR die eigentliche Seite umblättert – so werden Bilder
- // und Überschriften nicht während der Bewegung gequetscht.
- if(current===0 && target>0){
-   bookStage.classList.remove('is-cover');
-   await new Promise(resolve=>setTimeout(resolve,window.innerWidth<=650?220:870));
- }
-
- // Das alte Blatt bleibt als Overlay stehen; die neue Seite liegt von
- // Anfang an unverzerrt dahinter. Nur die Sichtbarkeit der Vorderseite
- // und eine feine beige Falzkante bewegen sich.
- leafFront.innerHTML=markup(current);
- leaf.hidden=false;
- leaf.className=`turn-leaf ${forward?'turn-forward':'turn-backward'}`;
- pageFold.hidden=false;
- book.classList.add('is-turning');
+ if(prefersReducedMotion.matches){finish(target,changeHistory);return;}
+ animating=true;book.classList.add('is-turning');
+ leafFront.innerHTML=markup(forward?current:target);
  book.dataset.chapter=pages[target].chapter;
- currentPage.innerHTML=markup(target);
- if(target!==0){
-   updatePaperLayers(target);
- }else{
-   // Beim Zurückblättern auf das Deckblatt bleibt das Buch offen,
-   // bis die Animation abgeschlossen ist. Danach schließt es sich.
-   book.classList.add('has-right-pages');
-   book.style.setProperty('--remaining-stack-width','18px');
- }
-
- const duration=940;
- const easing='cubic-bezier(.55,.06,.17,1)';
- const frontFrames=forward?[
-   {clipPath:'inset(0 0% 0 0%)',opacity:1,offset:0},
-   {clipPath:'inset(0 9% 0 0%)',opacity:1,offset:.15},
-   {clipPath:'inset(0 51% 0 0%)',opacity:1,offset:.54},
-   {clipPath:'inset(0 91% 0 0%)',opacity:1,offset:.89},
-   {clipPath:'inset(0 100% 0 0%)',opacity:1,offset:1}
- ]:[
-   {clipPath:'inset(0 0% 0 0%)',opacity:1,offset:0},
-   {clipPath:'inset(0 0% 0 9%)',opacity:1,offset:.15},
-   {clipPath:'inset(0 0% 0 51%)',opacity:1,offset:.54},
-   {clipPath:'inset(0 0% 0 91%)',opacity:1,offset:.89},
-   {clipPath:'inset(0 0% 0 100%)',opacity:1,offset:1}
+ currentPage.innerHTML=markup(forward?target:current);
+ leaf.hidden=false;leaf.className=`turn-leaf ${forward?'turn-forward':'turn-backward'}`;
+ // Statt einer starren Drehung wird der Turn in mehreren Abschnitten geführt:
+ // erst wird die Ecke angehoben, dann die Seite zügig geschwungen,
+ // am Ende verlangsamt sie sich mit einem leichten Nachfedern.
+ const duration=1390;
+ const pose = angle => `perspective(1800px) rotateY(${angle}deg)`;
+ const forwardFrames=[
+  {transform:pose(0),offset:0,easing:'cubic-bezier(.40,0,.67,.25)'},
+  {transform:pose(-9),offset:.13,easing:'cubic-bezier(.48,.12,.56,.64)'},
+  {transform:pose(-43),offset:.34,easing:'cubic-bezier(.52,.20,.56,.73)'},
+  {transform:pose(-97),offset:.55,easing:'cubic-bezier(.36,.61,.40,1)'},
+  {transform:pose(-160),offset:.83,easing:'cubic-bezier(.15,.63,.22,1)'},
+  {transform:pose(-180),offset:1}
  ];
- const foldFrames=forward?[
-   {left:'calc(100% - 28px)',opacity:0,offset:0},
-   {left:'calc(91% - 28px)',opacity:.9,offset:.15},
-   {left:'calc(49% - 28px)',opacity:.93,offset:.54},
-   {left:'calc(9% - 28px)',opacity:.7,offset:.89},
-   {left:'-27px',opacity:0,offset:1}
- ]:[
-   {left:'-3px',opacity:0,offset:0},
-   {left:'calc(9% - 3px)',opacity:.82,offset:.15},
-   {left:'calc(51% - 3px)',opacity:.92,offset:.54},
-   {left:'calc(91% - 3px)',opacity:.74,offset:.89},
-   {left:'calc(100% - 3px)',opacity:0,offset:1}
+ const backFrames=[
+  {transform:pose(-180),offset:0,easing:'cubic-bezier(.34,0,.56,.28)'},
+  {transform:pose(-168),offset:.15,easing:'cubic-bezier(.46,.10,.57,.67)'},
+  {transform:pose(-128),offset:.39,easing:'cubic-bezier(.53,.23,.57,.77)'},
+  {transform:pose(-65),offset:.63,easing:'cubic-bezier(.30,.55,.38,1)'},
+  {transform:pose(-13),offset:.88,easing:'cubic-bezier(.12,.58,.2,1)'},
+  {transform:pose(0),offset:1}
  ];
- const turn=leaf.animate(frontFrames,{duration,fill:'both',easing});
- const fold=pageFold.animate(foldFrames,{duration,fill:'both',easing});
- const underShade=revealShade.animate([
-   {opacity:0,offset:0},{opacity:.20,offset:.38},
-   {opacity:.30,offset:.67},{opacity:0,offset:1}
- ],{duration,fill:'both',easing:'ease-in-out'});
- const cast=castShadow.animate([
-   {opacity:0,offset:0},{opacity:.11,offset:.43},
-   {opacity:.16,offset:.72},{opacity:0,offset:1}
- ],{duration,fill:'both',easing:'ease-in-out'});
- activeAnimations=[turn,fold,underShade,cast];
- try{await turn.finished;}catch(_){/* Animation wurde abgebrochen. */}
+ const turn=leaf.animate(forward?forwardFrames:backFrames,{duration,fill:'both',easing:'linear'});
+ const shadow1=revealShade.animate(forward?[
+   {opacity:0,offset:0},{opacity:.14,offset:.12},{opacity:.64,offset:.48},{opacity:.36,offset:.72},{opacity:0,offset:1}
+  ]:[{opacity:0,offset:0},{opacity:.20,offset:.14},{opacity:.65,offset:.53},{opacity:.23,offset:.84},{opacity:0,offset:1}],
+  {duration,fill:'both',easing:'ease-in-out'});
+ const shadow2=castShadow.animate(forward?[
+   {opacity:0,offset:0},{opacity:.11,offset:.12},{opacity:.9,offset:.48},{opacity:.28,offset:.77},{opacity:0,offset:1}
+  ]:[{opacity:0,offset:0},{opacity:.23,offset:.17},{opacity:.86,offset:.54},{opacity:.10,offset:.87},{opacity:0,offset:1}],
+  {duration,fill:'both',easing:'ease-in-out'});
+ activeAnimations=[turn,shadow1,shadow2];
+ try{await turn.finished;}catch(_){/* interrupted by reduced motion or another navigation */}
  finish(target,changeHistory);
 }
 function indexFromHash(){const id=decodeURIComponent(location.hash.slice(1));const index=pages.findIndex(p=>p.id===id);return index<0?0:index;}
