@@ -18,7 +18,7 @@
     return;
   }
 
-  const storageKey = 'muhr-immobilien:besuch-gezaehlt:v2';
+  const storageKey = 'muhr-immobilien:besuch-gezaehlt:v3';
   let alreadyCounted = false;
 
   try {
@@ -43,7 +43,7 @@
   // hier keine erneute Verbindung zum externen Dienst herstellen.
   if (alreadyCounted && !value) return;
 
-  const namespaceAndKey = 'muhr-immobilien-de/aufrufe-seit-2026-10-12';
+  const namespaceAndKey = 'muhr-immobilien-de/besuche-neustart-2026-10-12-v3';
   const operation = alreadyCounted ? 'get' : 'hit';
   const endpoint = `https://abacus.jasoncameron.dev/${operation}/${namespaceAndKey}`;
 
