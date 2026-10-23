@@ -229,7 +229,7 @@ function setupRealPageFlip(){
       autoSize:false,
       mobileScrollSupport:true,
       swipeDistance:45,
-      clickEventForward:false
+      clickEventForward:true
     });
     flipbook.loadFromHTML(items);
     flipbook.turnToPage(current);
