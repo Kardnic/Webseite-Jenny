@@ -155,7 +155,22 @@ document.addEventListener('click',event=>{
  if(!link||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.button!==0)return;
  const index=pages.findIndex(p=>p.id===link.dataset.chapter);
  if(index<0)return;
- event.preventDefault();goTo(index);
+ event.preventDefault();
+ // Kapitel-Links müssen unabhängig von der Blätteranimation die exakt
+ // angeforderte Buchseite öffnen (auch bei StPageFlip auf Mobilgeräten).
+ if(realFlipbook){
+   const shown=realFlipbook.getCurrentPageIndex();
+   if(shown!==index){
+     flipHistory=true;
+     realFlipbook.turnToPage(index);
+   }
+   // turnToPage synchronisiert den sichtbaren Seitenindex über das flip-Event.
+   // Den URL-Anker zusätzlich eindeutig setzen, auch bei bereits aktiver Seite.
+   if(location.hash!==`#${pages[index].id}`)
+     history.pushState({page:pages[index].id},'',`#${pages[index].id}`);
+   return;
+ }
+ goTo(index);
 });
 prevButton.addEventListener('click',()=>goTo(current-1));
 nextButton.addEventListener('click',()=>goTo(current+1));
